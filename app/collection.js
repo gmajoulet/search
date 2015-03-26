@@ -32,6 +32,11 @@
   ItemCollection.prototype.getFetchUrl = function (query) {
     query = query || '';
 
+    // If we already have the next URL
+    if (this.nextUrl) {
+      return this.nextUrl;
+    }
+
     return 'http://api.deezer.com/search/track?output=jsonp&q=' + query;
   };
 
@@ -62,7 +67,10 @@
    * @param  {Object} response
    */
   ItemCollection.prototype.handleResponse = function (response) {
-    // @Todo
+    response = response || {};
+    this.items = this.items.concat(response && response.data);
+    this.totalItems = response.total;
+    this.nextUrl = response.next;
   };
 
   ItemCollection.prototype.render = function () {};
