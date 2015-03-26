@@ -1,26 +1,26 @@
-(function () {
-  /**
-   * Collection of items
-   * Used so it's easier to work on the list and its rendering with virtual DOM
-   *
-   * @param {Array} items
-   */
-  window.ItemCollection = function (items) {
+/**
+ * Collection of items
+ * Used so it's easier to work on the list and its rendering with virtual DOM
+ *
+ * @param {Array} items
+ */
+class ItemCollection {
+  constructor (items) {
     items = items || [];
 
     this.items = items;
     this.totalItems = items.length;
     this.fetchedItems = items.length;
-  };
+  }
 
   /**
    * Items collection getter
    *
    * @return {Array} Items
    */
-  ItemCollection.prototype.getItems = function () {
+  getItems () {
     return this.items;
-  };
+  }
 
   /**
    * Builds the URL to fetch the collection
@@ -29,7 +29,7 @@
    * @param  {String} query
    * @return {String}
    */
-  ItemCollection.prototype.getFetchUrl = function (query) {
+  getFetchUrl (query) {
     query = query || '';
 
     // If we already have the next URL
@@ -38,7 +38,7 @@
     }
 
     return 'http://api.deezer.com/search/track?output=jsonp&q=' + query;
-  };
+  }
 
   /**
    * Fetches the data or the next data if it's the same query
@@ -46,7 +46,7 @@
    * @param  {String} query
    * @return {Deferred}
    */
-  ItemCollection.prototype.fetch = function (query) {
+  fetch (query) {
     var url = this.getFetchUrl(query);
 
     // It's actually a deferred but I like to call those promise-like objects promise
@@ -58,7 +58,7 @@
     promise.done(this.handleResponse.bind(this));
 
     return promise;
-  };
+  }
 
   /**
    * Handles the response: adds the data to the collection items, get the total items available
@@ -66,12 +66,12 @@
    *
    * @param  {Object} response
    */
-  ItemCollection.prototype.handleResponse = function (response) {
+  handleResponse (response) {
     response = response || {};
     this.items = this.items.concat(response && response.data);
     this.totalItems = response.total;
     this.nextUrl = response.next;
-  };
+  }
 
-  ItemCollection.prototype.render = function () {};
-}());
+  render () {}
+};

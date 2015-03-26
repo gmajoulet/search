@@ -1,6 +1,7 @@
 var gulp  = require('gulp'),
   connect = require('gulp-connect'),
-  concat  = require('gulp-concat');
+  concat  = require('gulp-concat'),
+  babel   = require('gulp-babel');
 
 gulp.task('connect', function() {
   connect.server({
@@ -11,6 +12,7 @@ gulp.task('connect', function() {
 
 gulp.task('build', function () {
   gulp.src('./app/*.js')
+    .pipe(babel())
     .pipe(concat('deezer-app.js'))
     .pipe(gulp.dest('public'))
     .pipe(connect.reload());

@@ -1,13 +1,13 @@
-(function () {
-  /**
-   * Item model
-   *
-   * @param {Object} attributes
-   */
-  window.ItemModel = function (attributes) {
+/**
+ * Item model
+ *
+ * @param {Object} attributes
+ */
+class ItemModel {
+  constructor (attributes) {
     attributes = attributes || {};
     this.attributes = attributes;
-  };
+  }
 
   /**
    * Homemade function to get a nested attribute without triggering an error
@@ -15,7 +15,7 @@
    * @param  {String} path
    * @return {Mixed} The attribute, or null
    */
-  ItemModel.prototype.get = function (path) {
+  get (path) {
     path = path.split('.');
     var result = this.attributes,
       i;
@@ -29,5 +29,5 @@
     }
 
     return result;
-  };
-}());
+  }
+};
