@@ -1,8 +1,19 @@
 (function () {
-  var collection = new ItemCollection();
+  class App {
+    constructor () {
+      this.startListening();
+    }
 
-  collection.fetch('popof')
-    .done(function () {
-      console.log(collection.getItems());
-    });
+    /**
+     * Binding needed events
+     *
+     * @return {App}
+     */
+    startListening () {
+      return this;
+    }
+  }
+
+  // Start the app
+  new App();
 }());
