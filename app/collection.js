@@ -48,6 +48,11 @@ class ItemCollection {
    * @return {Deferred}
    */
   fetch (query) {
+    // If there is no more data to fetch
+    if (this.totalItems && (this.totalItems <= this.getItems().length)) {
+      return new $.Deferred().reject('no_more_data');
+    }
+
     this.fetching = true;
 
     this.query = query;
@@ -77,7 +82,7 @@ class ItemCollection {
     response = response || {};
     this.items = this.items.concat(response && response.data);
     this.totalItems = response.total;
-    this.nextUrl = response.next;
+    this.nextUrl = response.next || null;
   }
 
   /**

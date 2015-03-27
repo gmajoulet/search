@@ -42,13 +42,19 @@ $(document).on('ready', function () {
 
       var pixelsLeft = $(document).height() - $(window).height() - $(window).scrollTop();
 
-      if (pixelsLeft > 600 || this.currentCollection.fetching) {
+      // If we have more than one screen left before reaching the bottom of the page
+      if (pixelsLeft > $(window).height() || this.currentCollection.fetching) {
         return;
       }
 
       this.currentCollection.fetch()
         .done(function () {
           this.render(this.currentCollection);
+        }.bind(this))
+        .fail(function (err) {
+          if ('no_more_data' === err) {
+            this.$('[data-name=search_no_more_data]').show();
+          }
         }.bind(this));
     }
 
@@ -78,6 +84,7 @@ $(document).on('ready', function () {
     render (collection) {
       var dom = collection.getVirtualDOM();
       $('[data-name=search_results]').html(dom);
+      this.$('[data-name=search_no_more_data]').hide();
     }
 
     /**
