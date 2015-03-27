@@ -43,19 +43,19 @@ QUnit.test('should test the ItemCollection getItems method', function (assert) {
 
 QUnit.test('should test the ItemCollection getFetchUrl method', function (assert) {
   var collection = new ItemCollection();
-  assert.ok('http://api.deezer.com/search/track?output=jsonp&q=foo' === collection.getFetchUrl('foo'));
-  // Should not fail if no query is passed
-  assert.ok('http://api.deezer.com/search/track?output=jsonp&q=' === collection.getFetchUrl());
+  collection.setQuery('foo');
+  assert.ok('http://api.deezer.com/search/track?output=jsonp&q=foo' === collection.getFetchUrl());
 });
 
 QUnit.test('should test the ItemCollection fetch method', function (assert) {
   var done = assert.async();
   var collection = new ItemCollection();
+  collection.setQuery('foo');
 
   // No items for now
   assert.ok(0 === collection.getItems().length);
 
-  collection.fetch('foo')
+  collection.fetch()
     .done(function () {
       assert.ok(25 === collection.getItems().length);
       done();

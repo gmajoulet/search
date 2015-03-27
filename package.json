@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "main": "Gruntfile.js",
   "scripts": {
-    "start": "node_modules/gulp/bin/gulp.js"
+    "start": "node_modules/gulp/bin/gulp.js",
+    "test": "node_modules/gulp/bin/gulp.js test"
   },
   "devDependencies": {
     "gulp": "~3.8",
