@@ -57,9 +57,15 @@ $(document).on('ready', function () {
      * @param  {String} query
      */
     search (query) {
-      this.currentCollection = new ItemCollection();
+      query = query || '';
 
-      this.fetchCollection(query)
+      /**
+       * We should cache the collections by query
+       */
+      this.currentCollection = new ItemCollection();
+      this.currentCollection.setQuery(query);
+
+      this.fetchCollection()
         .done(this.renderCollection);
     }
 
@@ -72,15 +78,13 @@ $(document).on('ready', function () {
      * @param  {String} query
      * @return {Deferred}
      */
-    fetchCollection (query) {
-      query = query || '';
-
+    fetchCollection () {
       // If we're not working on any collection, step out
       if (!this.currentCollection) {
         return;
       }
 
-      return this.currentCollection.fetch(query)
+      return this.currentCollection.fetch()
         .done(function () {
           this.renderCollection(this.currentCollection);
         }.bind(this))

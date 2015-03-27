@@ -12,6 +12,7 @@ class ItemCollection {
     this.items = items;
     this.totalItems = items.length;
     this.fetchedItems = items.length;
+    this.query = '';
   }
 
   /**
@@ -23,6 +24,15 @@ class ItemCollection {
     return this.items;
   }
 
+  getQuery () {
+    return this.query || '';
+  }
+
+  setQuery (query) {
+    this.query = query;
+    return this;
+  }
+
   /**
    * Builds the URL to fetch the collection
    * Here we can add some smart logic/cache/whatever
@@ -30,15 +40,13 @@ class ItemCollection {
    * @param  {String} query
    * @return {String}
    */
-  getFetchUrl (query) {
-    query = query || '';
-
+  getFetchUrl () {
     // If we already have the next URL
     if (this.nextUrl) {
       return this.nextUrl;
     }
 
-    return 'http://api.deezer.com/search/track?output=jsonp&q=' + query;
+    return 'http://api.deezer.com/search/track?output=jsonp&q=' + this.getQuery();
   }
 
   /**
@@ -47,7 +55,7 @@ class ItemCollection {
    * @param  {String} query
    * @return {Deferred}
    */
-  fetch (query) {
+  fetch () {
     // If there is no more data to fetch
     if (this.totalItems && (this.totalItems <= this.getItems().length)) {
       return new $.Deferred().reject('no_more_data');
@@ -55,8 +63,7 @@ class ItemCollection {
 
     this.fetching = true;
 
-    this.query = query;
-    var url = this.getFetchUrl(query);
+    var url = this.getFetchUrl();
 
     // It's actually a deferred but I like to call those promise-like objects promise
     var promise = $.ajax({
