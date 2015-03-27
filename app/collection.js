@@ -8,6 +8,7 @@ class ItemCollection {
   constructor (items) {
     items = items || [];
 
+    this.renderer = new Renderer;
     this.items = items;
     this.totalItems = items.length;
     this.fetchedItems = items.length;
@@ -73,5 +74,19 @@ class ItemCollection {
     this.nextUrl = response.next;
   }
 
-  render () {}
+  /**
+   * Get all the DOM as a string so it's inserted at once
+   * By limiting all the interactions DOM <-> JS, we're waaaay faster
+   *
+   * @param  {Array} collection
+   */
+  getVirtualDOM () {
+    var dom = '';
+
+    this.getItems().map(function (item) {
+      dom += this.renderer.getTemplate('template_item', item);
+    }.bind(this));
+
+    return dom;
+  }
 };

@@ -1,7 +1,8 @@
-(function () {
+$(document).on('ready', function () {
   class App {
     constructor ($el) {
       this.$el = $el;
+      this.renderer = new Renderer();
       this.startListening();
     }
 
@@ -41,8 +42,15 @@
         }.bind(this));
     }
 
+    /**
+     * Get all the DOM as a string so it's inserted at once
+     * By limiting all the interactions DOM <-> JS, we're waaaay faster
+     *
+     * @param  {Array} collection
+     */
     render (collection) {
-      // Render the collection
+      var dom = collection.getVirtualDOM();
+      $('[data-name=search_results]').html(dom);
     }
 
     /**
@@ -58,4 +66,4 @@
 
   // Start the app
   new App($('body'));
-}());
+});
