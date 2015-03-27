@@ -13,7 +13,19 @@
   </ul>
 
   <script type='text/html' id='template_item'>
-    <li><%=title%></li>
+    <li>
+      <ul>
+        <li>
+          Artist: <%=artist.name%>
+        </li>
+        <li>
+          Title: <%=title%>
+        </li>
+        <li>
+          <a href="<%=link%>" target="_blank">Play</a>
+        </li>
+      </ul>
+    </li>
   </script>
 
   <script src='//code.jquery.com/jquery-2.1.3.min.js'></script>
