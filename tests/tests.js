@@ -65,3 +65,10 @@ QUnit.test('should test the ItemCollection fetch method', function (assert) {
 QUnit.test('should find the Renderer class', function (assert) {
   assert.ok('function' === typeof Renderer);
 });
+
+QUnit.test('should get the template as a string', function (assert) {
+  var renderer = new Renderer,
+    template = renderer.getTemplate('template_foo', { bar: 'baz' });
+
+  assert.ok(template.trim() === '<p>baz</p>');
+});
