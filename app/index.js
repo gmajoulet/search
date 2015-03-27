@@ -47,15 +47,8 @@ $(document).on('ready', function () {
         return;
       }
 
-      this.currentCollection.fetch()
-        .done(function () {
-          this.render(this.currentCollection);
-        }.bind(this))
-        .fail(function (err) {
-          if ('no_more_data' === err) {
-            this.$('[data-name=search_no_more_data]').show();
-          }
-        }.bind(this));
+      this.fetchCollection()
+        .done(this.renderCollection);
     }
 
     /**
@@ -64,12 +57,37 @@ $(document).on('ready', function () {
      * @param  {String} query
      */
     search (query) {
-      var collection = new ItemCollection();
-      this.currentCollection = collection;
+      this.currentCollection = new ItemCollection();
 
-      collection.fetch(query)
+      this.fetchCollection(query)
+        .done(this.renderCollection);
+    }
+
+    /**
+     * Fetches the collection for the given query
+     * If the user is scrolling, the collection didn't change and the query is already
+     * set, so we don't need to pass it again
+     * If we fetch it for the first time (new Collection after a new search) we need to set the query
+     *
+     * @param  {String} query
+     * @return {Deferred}
+     */
+    fetchCollection (query) {
+      query = query || '';
+
+      // If we're not working on any collection, step out
+      if (!this.currentCollection) {
+        return;
+      }
+
+      return this.currentCollection.fetch(query)
         .done(function () {
-          this.render(collection);
+          this.renderCollection(this.currentCollection);
+        }.bind(this))
+        .fail(function (err) {
+          if ('no_more_data' === err) {
+            this.$('[data-name=search_no_more_data]').show();
+          }
         }.bind(this));
     }
 
@@ -81,8 +99,13 @@ $(document).on('ready', function () {
      *
      * @param  {Array} collection
      */
-    render (collection) {
-      var dom = collection.getVirtualDOM();
+    renderCollection () {
+      // If we're not working on any collection, step out
+      if (!this.currentCollection) {
+        return;
+      }
+
+      var dom = this.currentCollection.getVirtualDOM();
       $('[data-name=search_results]').html(dom);
       this.$('[data-name=search_no_more_data]').hide();
     }
