@@ -48,6 +48,9 @@ class ItemCollection {
    * @return {Deferred}
    */
   fetch (query) {
+    this.fetching = true;
+
+    this.query = query;
     var url = this.getFetchUrl(query);
 
     // It's actually a deferred but I like to call those promise-like objects promise
@@ -56,7 +59,10 @@ class ItemCollection {
       dataType: 'jsonp'
     });
 
-    promise.done(this.handleResponse.bind(this));
+    promise.done(function () {
+      this.handleResponse.apply(this, arguments);
+      this.fetching = false;
+    }.bind(this));
 
     return promise;
   }

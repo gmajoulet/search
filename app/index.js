@@ -13,6 +13,7 @@ $(document).on('ready', function () {
      */
     startListening () {
       this.$('[data-name=search_form]').on('submit', this.onSearch.bind(this));
+      $(window).on('scroll', this.onScroll.bind(this));
 
       return this;
     }
@@ -29,12 +30,36 @@ $(document).on('ready', function () {
     }
 
     /**
+     * On event scroll, should we auto fetch more data?
+     *
+     * @param  {Object} event
+     */
+    onScroll (event) {
+      // If there is no result collection, step out
+      if (!this.currentCollection) {
+        return;
+      }
+
+      var pixelsLeft = $(document).height() - $(window).height() - $(window).scrollTop();
+
+      if (pixelsLeft > 600 || this.currentCollection.fetching) {
+        return;
+      }
+
+      this.currentCollection.fetch()
+        .done(function () {
+          this.render(this.currentCollection);
+        }.bind(this));
+    }
+
+    /**
      * Instanciates a new ItemCollection if needed
      *
      * @param  {String} query
      */
     search (query) {
       var collection = new ItemCollection();
+      this.currentCollection = collection;
 
       collection.fetch(query)
         .done(function () {
@@ -45,6 +70,8 @@ $(document).on('ready', function () {
     /**
      * Get all the DOM as a string so it's inserted at once
      * By limiting all the interactions DOM <-> JS, we're waaaay faster
+     * We could go even faster by only getting the new elements DOM and appending it
+     * But it requires a lot more code
      *
      * @param  {Array} collection
      */
